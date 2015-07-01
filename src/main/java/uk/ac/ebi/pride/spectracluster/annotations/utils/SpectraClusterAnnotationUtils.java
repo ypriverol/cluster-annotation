@@ -76,4 +76,13 @@ public class SpectraClusterAnnotationUtils {
         }
     }
 
+    public static String getRawProteinID(String line){
+        if(line != null && line.length() > 0){
+            String[] lineString = line.split("\\s+");
+            if(lineString != null && lineString.length >= 1)
+                return lineString[0];
+        }
+        return line;
+    }
+
 }
