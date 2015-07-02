@@ -25,6 +25,8 @@ public class AnnotatedSpectraCluster extends SpectraCluster {
     // List of the proteins where the four peptide appear .
     List<String> fourPepSeqContaminantList = null;
 
+    List<Double> similarities   = null;
+
     public AnnotatedSpectraCluster(){}
 
     public AnnotatedSpectraCluster(String id, Float averagePrecursorMz, Float averagePrecursorMzWithHighestRatio, Integer averagePrecursorCharge, Integer averagePrecursorChargeWithHighestRatio, Integer maxPrecursorCharge, Integer minPrecursorCharge, Integer maxPrecursorChargeWithHighestRatio, Integer minPrecursorChargeWithHighestRatio, Float maxPrecursorMz, Float minPrecursorMz, Float precursorMzRange, Float maxPrecursorMzWithHighestRatio, Float minPrecursorMzWithHighestRatio, Float precursorMzRangeOnPeptideWithHighestRatio, Integer numberOfSpectra, Set<String> projects, Set<String> projectOnPeptideWithHighestRatio, boolean multipleHighRankingPeptideSequences, Integer numberOfDistinctPeptideSequences, Integer numberOfPsms, Set<String> speciesInTaxonomyId, Set<String> speciesOnPeptideWithHighestRatioInTaxonomyId, Float highestRatio, String peptideSequenceWithHighestRatio, Integer peptideCountWithHighestRatio, String fileName, String secondPeptideSequenceWithHighestRatio, Integer secondPeptideCountWithHighestRatio, String thirdPeptideSequenceWithHighestRatio, Integer thirdPeptideCountWithHighestRatio, String fourPeptideSequenceWithHighestRatio, Integer fourPeptideCountWithHighestRatio) {
@@ -81,6 +83,14 @@ public class AnnotatedSpectraCluster extends SpectraCluster {
     public void addFourPepSeqContaminant(String contaminant) {
         if(this.fourPepSeqContaminantList == null) this.fourPepSeqContaminantList = new ArrayList<String>();
         this.fourPepSeqContaminantList.add(contaminant);
+    }
+
+    public List<Double> getSimilarities() {
+        return similarities;
+    }
+
+    public void setSimilarities(List<Double> similarities) {
+        this.similarities = similarities;
     }
 
     @Override
@@ -209,9 +219,17 @@ public class AnnotatedSpectraCluster extends SpectraCluster {
         // list of Contaminants of first pep
         line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(fourPepSeqContaminantList));
 
+        Double similarity = (similarities != null && similarities.size() > 0)?similarities.get(0):null;
+        line = SpectraClusterAnnotationUtils.appendObject(line,  similarity);
+
+        similarity = (similarities != null && similarities.size() > 1)?similarities.get(1):null;
+        line = SpectraClusterAnnotationUtils.appendObject(line,  similarity);
+
+        similarity = (similarities != null && similarities.size() > 2)?similarities.get(2):null;
+        line = SpectraClusterAnnotationUtils.appendObject(line, similarity);
+
         // remove the last tab
         line = line.delete(line.length() - 1, line.length());
-
 
         return  line;
     }

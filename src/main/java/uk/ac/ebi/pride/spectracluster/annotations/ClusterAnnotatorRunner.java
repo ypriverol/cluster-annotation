@@ -1,10 +1,12 @@
 package uk.ac.ebi.pride.spectracluster.annotations;
 
+import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.pride.jfasta.FastaReader;
 import uk.ac.ebi.pride.jfasta.model.DBFastaSequence;
 import uk.ac.ebi.pride.spectracluster.annotations.annotation.ContaminantAnnotation;
+import uk.ac.ebi.pride.spectracluster.annotations.annotation.VariantAnnotation;
 import uk.ac.ebi.pride.spectracluster.annotations.data.AnnotatedSpectraCluster;
 import uk.ac.ebi.pride.spectracluster.annotations.io.SpectraClusterFileParsingExecutable;
 import uk.ac.ebi.pride.spectracluster.annotations.utils.SpectraClusterAnnotationUtils;
@@ -28,7 +30,7 @@ public class ClusterAnnotatorRunner {
 
     public static final Logger logger = LoggerFactory.getLogger(ClusterAnnotatorRunner.class);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CompoundNotFoundException {
         if (args.length != 3) {
             System.err.println("Usage: <origin file> <contaminant database> <output file>");
             System.exit(1);
@@ -59,6 +61,7 @@ public class ClusterAnnotatorRunner {
         }
 
         ContaminantAnnotation contaminantAnnotation = ContaminantAnnotation.getInstance(seq);
+        VariantAnnotation variantAnnotation = VariantAnnotation.getInstance();
 
         for(AnnotatedSpectraCluster cluster: clusters){
             if(cluster.getPeptideSequenceWithHighestRatio() != null){
@@ -77,10 +80,12 @@ public class ClusterAnnotatorRunner {
                 List<String> contaminants = contaminantAnnotation.annotator(cluster.getFourPeptideSequenceWithHighestRatio());
                 cluster.setFourPepSeqContaminantList(contaminants);
             }
+            cluster.setSimilarities(variantAnnotation.annotator(cluster));
         }
 
-        for(AnnotatedSpectraCluster cluster: clusters)
-            out.println(cluster.reportLine());
+        out.println(SpectraClusterAnnotationUtils.getValuesHeader());
 
+        for(AnnotatedSpectraCluster cluster: clusters)
+            out.append(cluster.reportLine()).append("\n");
     }
 }

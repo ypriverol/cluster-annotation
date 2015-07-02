@@ -59,7 +59,16 @@ public class SpectraClusterAnnotationUtils {
         PEPTIDE_HIGHEST_FOUR("PEP_SEQ_FOUR", "The peptide sequence for the four peptide with the highest ratio within the cluster"),
         PEPTIDE_COUNT_HIGHEST_FOUR("PEP_COUNT_FOUR", "The peptide count for the four peptide with the highest ratio within the cluster"),
 
-        FILE_NAME("FILE_NAME", "The original clustering result file that contains this cluster");
+        FILE_NAME("FILE_NAME", "The original clustering result file that contains this cluster"),
+
+        PEP_CONTAMINANTS("PEP_CONTAMINANT", "The list of proteins where this peptides appear"),
+        PEP_SECOND_CONTAMINANTS("PEP_CONTAMINANT_SECOND", "The list of proteins where this peptides appear"),
+        PEP_THIRD_CONTAMINANTS("PEP_CONTAMINANT_THIRD", "The list of proteins where this peptides appear"),
+        PEP_FOUR_CONTAMINANTS("PEP_CONTAMINANT_FOUR", "The list of proteins where this peptides appear"),
+
+        PEP_SECOND_SIMILARITY("PEP_SIMILARITY_SECOND", "The list of proteins where this peptides appear"),
+        PEP_THIRD_SIMILARITY("PEP_SIMILARITY_THIRD",   "The list of proteins where this peptides appear"),
+        PEP_FOUR_SIMILARITY("PEP_SIMILARITY_FOUR",     "The list of proteins where this peptides appear");
 
         String header;
         String description;
@@ -76,6 +85,7 @@ public class SpectraClusterAnnotationUtils {
         public String getDescription() {
             return description;
         }
+
     }
 
     public static String getRawProteinID(String line){
@@ -99,6 +109,12 @@ public class SpectraClusterAnnotationUtils {
         return line;
     }
 
+    public static StringBuilder appendDouble(StringBuilder line, Double f) {
+        String fString = f == null ? NA : String.format("%10.3f", f).trim();
+        line.append(fString).append("\t");
+        return line;
+    }
+
     public static String collectionToString(Collection objs) {
         StringBuilder appender = new StringBuilder();
 
@@ -111,6 +127,13 @@ public class SpectraClusterAnnotationUtils {
 
         String content = appender.toString();
         return content.substring(0, content.length() - 1);
+    }
+
+    public static StringBuilder getValuesHeader(){
+        StringBuilder line = new StringBuilder();
+        for(HEADER value: HEADER.values())
+            line.append(value.getHeader()).append(TAB_DELIMITED);
+        return line;
     }
 
 }
