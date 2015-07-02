@@ -1,51 +1,53 @@
-package uk.ac.ebi.pride.spectracluster.annotations.annotation;
+package uk.ac.ebi.pride.spectracluster.annotations;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.ac.ebi.pride.jfasta.FastaReader;
 import uk.ac.ebi.pride.jfasta.model.DBFastaSequence;
-
+import uk.ac.ebi.pride.spectracluster.annotations.annotation.ContaminantAnnotation;
 import uk.ac.ebi.pride.spectracluster.annotations.data.AnnotatedSpectraCluster;
 import uk.ac.ebi.pride.spectracluster.annotations.io.SpectraClusterFileParsingExecutable;
 import uk.ac.ebi.pride.spectracluster.annotations.utils.SpectraClusterAnnotationUtils;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class ContaminantAnnotationTest {
+/**
+ * Main class to call to collect cluster statistics
+ *
+ * @author Yasset Perez-Riverol
+ * @version $Id$
+ */
+public class ClusterAnnotatorRunner {
 
-    private File spectraFile;
+    public static final Logger logger = LoggerFactory.getLogger(ClusterAnnotatorRunner.class);
 
-    private List<AnnotatedSpectraCluster> clusters;
+    public static void main(String[] args) throws IOException {
+        if (args.length != 3) {
+            System.err.println("Usage: <origin file> <contaminant database> <output file>");
+            System.exit(1);
+        }
 
-    private FastaReader fastaReader;
+        File inputFile  = new File(args[0]);
+        File fastaFile  = new File(args[1]);
+        File outputFile = new File(args[2]);
 
-    @Before
-    public void setUp() throws Exception {
-        URL resource = ContaminantAnnotationTest.class.getClassLoader().getResource("final.csv");
-        spectraFile = new File(resource.toURI());
-        clusters = new ArrayList<AnnotatedSpectraCluster>();
-        SpectraClusterFileParsingExecutable spectrumReader = new SpectraClusterFileParsingExecutable(spectraFile, clusters);
+        PrintStream out = new PrintStream(outputFile);
+
+
+        List<AnnotatedSpectraCluster> clusters = new ArrayList<AnnotatedSpectraCluster>();
+        SpectraClusterFileParsingExecutable spectrumReader = new SpectraClusterFileParsingExecutable(inputFile, clusters);
         spectrumReader.run();
         clusters = spectrumReader.retrieveClusters();
-        resource = ContaminantAnnotationTest.class.getClassLoader().getResource("contaminants.fasta");
-        fastaReader = new FastaReader(resource, "r");
-    }
 
-    @After
-    public void tearDown() throws Exception {
+        FastaReader fastaReader = new FastaReader(fastaFile, "r");
 
-    }
-
-    @Test
-    public void testAnnotator() throws Exception {
         fastaReader.readFastaFile();
 
         Map<String, String> seq = new HashMap<String, String>();
@@ -77,7 +79,8 @@ public class ContaminantAnnotationTest {
             }
         }
 
-        assertEquals(clusters.size(), 99);
-    }
+        for(AnnotatedSpectraCluster cluster: clusters)
+            out.println(cluster.reportLine());
 
+    }
 }

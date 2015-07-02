@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.annotations.data;
 
+import uk.ac.ebi.pride.spectracluster.annotations.utils.SpectraClusterAnnotationUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -79,5 +81,166 @@ public class AnnotatedSpectraCluster extends SpectraCluster {
     public void addFourPepSeqContaminant(String contaminant) {
         if(this.fourPepSeqContaminantList == null) this.fourPepSeqContaminantList = new ArrayList<String>();
         this.fourPepSeqContaminantList.add(contaminant);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    public StringBuilder reportLine(){
+
+        StringBuilder line = new StringBuilder();
+
+        line = SpectraClusterAnnotationUtils.appendObject(line, getId());
+
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getAveragePrecursorMz());
+
+        // average precursor m/z on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getAveragePrecursorMzWithHighestRatio());
+
+        // average precursor charge
+        line = SpectraClusterAnnotationUtils.appendObject(line, getAveragePrecursorCharge());
+
+        // average precursor charge on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendObject(line, getAveragePrecursorChargeWithHighestRatio());
+
+        // max precursor charge
+        line = SpectraClusterAnnotationUtils.appendObject(line, getMaxPrecursorCharge());
+
+        // min precursor charge
+        line = SpectraClusterAnnotationUtils.appendObject(line, getMinPrecursorCharge());
+
+        // max precursor charge on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendObject(line, getMaxPrecursorChargeWithHighestRatio());
+
+        // min precursor charge on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendObject(line, getMinPrecursorChargeWithHighestRatio());
+
+        // maximum precursor m/z
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getMaxPrecursorMz());
+
+        // minimum precursor m/z
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getMinPrecursorMz());
+
+        // precursor m/z range
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getPrecursorMzRange());
+
+        // max precursor m/z on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getMaxPrecursorMzWithHighestRatio());
+
+        // min precursor m/z on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getMinPrecursorMzWithHighestRatio());
+
+        // precursor m/z range on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getPrecursorMzRangeOnPeptideWithHighestRatio());
+
+        // Number of spectra
+        line = SpectraClusterAnnotationUtils.appendObject(line, getNumberOfSpectra());
+
+        // Number of projects
+        Set<String> projects = getProjects();
+        line = SpectraClusterAnnotationUtils.appendObject(line, projects.size());
+
+        // projects
+        line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(projects));
+
+        // Number of projects on peptide with highest ratio
+        Set<String> projectOnPeptideWithHighestRatio = getProjectOnPeptideWithHighestRatio();
+        line = SpectraClusterAnnotationUtils.appendObject(line, projectOnPeptideWithHighestRatio.size());
+
+        // projects on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(projectOnPeptideWithHighestRatio));
+
+        // multiple high ranking peptide sequences
+        line = SpectraClusterAnnotationUtils.appendObject(line, isMultipleHighRankingPeptideSequences());
+
+        // Number of distinct peptide sequences
+        line = SpectraClusterAnnotationUtils.appendObject(line, getNumberOfDistinctPeptideSequences());
+
+        // Number of PSMs
+        line = SpectraClusterAnnotationUtils.appendObject(line, getNumberOfPsms());
+
+        // Number of species
+        Set<String> speciesInTaxonomyId = getSpeciesInTaxonomyId();
+        line = SpectraClusterAnnotationUtils.appendObject(line, speciesInTaxonomyId.size());
+
+        // species
+        line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(speciesInTaxonomyId));
+
+        // Number of species on peptide with highest ratio
+        Set<String> speciesOnPeptideWithHighestRatioInTaxonomyId = getSpeciesOnPeptideWithHighestRatioInTaxonomyId();
+        line = SpectraClusterAnnotationUtils.appendObject(line, speciesOnPeptideWithHighestRatioInTaxonomyId.size());
+
+        // species on peptide with highest ratio
+        line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(speciesOnPeptideWithHighestRatioInTaxonomyId));
+
+        // highest ratio
+        line = SpectraClusterAnnotationUtils.appendFloat(line, getHighestRatio());
+
+        // peptide sequence with highest ratio
+        line = SpectraClusterAnnotationUtils.appendObject(line, getPeptideSequenceWithHighestRatio());
+        line = SpectraClusterAnnotationUtils.appendObject(line, getPeptideCountWithHighestRatio());
+
+        //add second sequence
+        line = SpectraClusterAnnotationUtils.appendObject(line, getSecondPeptideSequenceWithHighestRatio());
+        line = SpectraClusterAnnotationUtils.appendObject(line, getSecondPeptideCountWithHighestRatio());
+
+        //add third sequence
+        line = SpectraClusterAnnotationUtils.appendObject(line, getThirdPeptideSequenceWithHighestRatio());
+        line = SpectraClusterAnnotationUtils.appendObject(line, getThirdPeptideCountWithHighestRatio());
+
+        //add four sequence
+        line = SpectraClusterAnnotationUtils.appendObject(line, getFourPeptideSequenceWithHighestRatio());
+        line = SpectraClusterAnnotationUtils.appendObject(line, getFourPeptideCountWithHighestRatio());
+
+        // clustering file name
+        line = SpectraClusterAnnotationUtils.appendObject(line, getFileName());
+
+        // list of Contaminants of first pep
+        line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(pepSeqContaminantList));
+
+        // list of Contaminants of first pep
+        line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(secondPepSeqContaminantList));
+
+        // list of Contaminants of first pep
+        line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(thirdPepSeqContaminantList));
+
+        // list of Contaminants of first pep
+        line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(fourPepSeqContaminantList));
+
+        // remove the last tab
+        line = line.delete(line.length() - 1, line.length());
+
+
+        return  line;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AnnotatedSpectraCluster)) return false;
+
+        AnnotatedSpectraCluster that = (AnnotatedSpectraCluster) o;
+
+        if (fourPepSeqContaminantList != null ? !fourPepSeqContaminantList.equals(that.fourPepSeqContaminantList) : that.fourPepSeqContaminantList != null)
+            return false;
+        if (pepSeqContaminantList != null ? !pepSeqContaminantList.equals(that.pepSeqContaminantList) : that.pepSeqContaminantList != null)
+            return false;
+        if (secondPepSeqContaminantList != null ? !secondPepSeqContaminantList.equals(that.secondPepSeqContaminantList) : that.secondPepSeqContaminantList != null)
+            return false;
+        if (thirdPepSeqContaminantList != null ? !thirdPepSeqContaminantList.equals(that.thirdPepSeqContaminantList) : that.thirdPepSeqContaminantList != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = pepSeqContaminantList != null ? pepSeqContaminantList.hashCode() : 0;
+        result = 31 * result + (secondPepSeqContaminantList != null ? secondPepSeqContaminantList.hashCode() : 0);
+        result = 31 * result + (thirdPepSeqContaminantList != null ? thirdPepSeqContaminantList.hashCode() : 0);
+        result = 31 * result + (fourPepSeqContaminantList != null ? fourPepSeqContaminantList.hashCode() : 0);
+        return result;
     }
 }

@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.annotations.utils;
 
+import java.util.Collection;
+
 /**
  * @author Yasset Perez-Riverol (ypriverol@gmail.com)
  * @date 01/07/2015
@@ -83,6 +85,32 @@ public class SpectraClusterAnnotationUtils {
                 return lineString[0];
         }
         return line;
+    }
+
+    public static StringBuilder appendObject(StringBuilder line, Object s) {
+        String str = s == null ? NA : s.toString();
+        line.append(str).append("\t");
+        return line;
+    }
+
+    public static StringBuilder appendFloat(StringBuilder line, Float f) {
+        String fString = f == null ? NA : String.format("%10.3f", f).trim();
+        line.append(fString).append("\t");
+        return line;
+    }
+
+    public static String collectionToString(Collection objs) {
+        StringBuilder appender = new StringBuilder();
+
+        if (objs == null || objs.isEmpty())
+            return NA;
+
+        for (Object obj : objs) {
+            appender.append(obj).append(";");
+        }
+
+        String content = appender.toString();
+        return content.substring(0, content.length() - 1);
     }
 
 }
