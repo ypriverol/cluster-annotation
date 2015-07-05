@@ -25,7 +25,7 @@ public class AnnotatedSpectraCluster extends SpectraCluster {
     // List of the proteins where the four peptide appear .
     List<String> fourPepSeqContaminantList = null;
 
-    List<Double> similarities   = null;
+    List<Integer> similarities   = null;
 
     public AnnotatedSpectraCluster(){}
 
@@ -85,11 +85,11 @@ public class AnnotatedSpectraCluster extends SpectraCluster {
         this.fourPepSeqContaminantList.add(contaminant);
     }
 
-    public List<Double> getSimilarities() {
+    public List<Integer> getSimilarities() {
         return similarities;
     }
 
-    public void setSimilarities(List<Double> similarities) {
+    public void setSimilarities(List<Integer> similarities) {
         this.similarities = similarities;
     }
 
@@ -219,11 +219,23 @@ public class AnnotatedSpectraCluster extends SpectraCluster {
         // list of Contaminants of first pep
         line = SpectraClusterAnnotationUtils.appendObject(line, SpectraClusterAnnotationUtils.collectionToString(fourPepSeqContaminantList));
 
-        Double similarity = (similarities != null && similarities.size() > 0)?similarities.get(0):null;
-        line = SpectraClusterAnnotationUtils.appendObject(line,  similarity);
+        // list of Contaminants of first pep
+        line = (pepSeqContaminantList != null && !pepSeqContaminantList.isEmpty())?SpectraClusterAnnotationUtils.appendObject(line, Boolean.TRUE):SpectraClusterAnnotationUtils.appendObject(line, Boolean.FALSE);
+
+        // list of Contaminants of first pep
+        line = (secondPepSeqContaminantList != null && !secondPepSeqContaminantList.isEmpty())?SpectraClusterAnnotationUtils.appendObject(line, Boolean.TRUE):SpectraClusterAnnotationUtils.appendObject(line, Boolean.FALSE);
+
+        // list of Contaminants of first pep
+        line = (thirdPepSeqContaminantList != null && !thirdPepSeqContaminantList.isEmpty())?SpectraClusterAnnotationUtils.appendObject(line, Boolean.TRUE):SpectraClusterAnnotationUtils.appendObject(line, Boolean.FALSE);
+
+        // list of Contaminants of first pep
+        line = (fourPepSeqContaminantList != null && !fourPepSeqContaminantList.isEmpty())?SpectraClusterAnnotationUtils.appendObject(line, Boolean.TRUE):SpectraClusterAnnotationUtils.appendObject(line, Boolean.FALSE);
+
+        Integer similarity = (similarities != null && similarities.size() > 0)?similarities.get(0):null;
+        line = SpectraClusterAnnotationUtils.appendObject(line, similarity);
 
         similarity = (similarities != null && similarities.size() > 1)?similarities.get(1):null;
-        line = SpectraClusterAnnotationUtils.appendObject(line,  similarity);
+        line = SpectraClusterAnnotationUtils.appendObject(line, similarity);
 
         similarity = (similarities != null && similarities.size() > 2)?similarities.get(2):null;
         line = SpectraClusterAnnotationUtils.appendObject(line, similarity);

@@ -33,29 +33,29 @@ public class VariantAnnotation {
         return instance;
     }
 
-    public List<Double> annotator(AnnotatedSpectraCluster cluster) throws CompoundNotFoundException {
-        List<Double> valueSimilarity  = new ArrayList<Double>();
+    public List<Integer> annotator(AnnotatedSpectraCluster cluster) throws CompoundNotFoundException {
+        List<Integer> valueSimilarity  = new ArrayList<Integer>();
 
         List<ProteinSequence> peptides = new ArrayList<>();
         if(cluster.getPeptideSequenceWithHighestRatio() != null){
-            ProteinSequence pepSEq = new ProteinSequence(cluster.getPeptideSequenceWithHighestRatio());
+            ProteinSequence pepSEq = new ProteinSequence(validateSeq(cluster.getPeptideSequenceWithHighestRatio()));
             pepSEq.setAccession(new AccessionID("PEP_SEQ"));
             peptides.add(pepSEq);
         }
         if(cluster.getSecondPeptideSequenceWithHighestRatio() != null){
-            ProteinSequence pepSEq = new ProteinSequence(cluster.getSecondPeptideSequenceWithHighestRatio());
+            ProteinSequence pepSEq = new ProteinSequence(validateSeq(cluster.getSecondPeptideSequenceWithHighestRatio()));
             pepSEq.setAccession(new AccessionID("PEP_SEQ_SECOND"));
             peptides.add(pepSEq);
         }
 
         if(cluster.getThirdPeptideSequenceWithHighestRatio() != null){
-            ProteinSequence pepSEq = new ProteinSequence(cluster.getThirdPeptideSequenceWithHighestRatio());
+            ProteinSequence pepSEq = new ProteinSequence(validateSeq(cluster.getThirdPeptideSequenceWithHighestRatio()));
             pepSEq.setAccession(new AccessionID("PEP_SEQ_THIRD"));
             peptides.add(pepSEq);
         }
 
         if(cluster.getFourPeptideSequenceWithHighestRatio() != null){
-            ProteinSequence pepSEq = new ProteinSequence(cluster.getFourPeptideSequenceWithHighestRatio());
+            ProteinSequence pepSEq = new ProteinSequence(validateSeq(cluster.getFourPeptideSequenceWithHighestRatio()));
             pepSEq.setAccession(new AccessionID("PEP_SEQ_FOUR"));
             peptides.add(pepSEq);
         }
@@ -63,19 +63,11 @@ public class VariantAnnotation {
         if(peptides.size() > 1){
             ProteinSequence peptideSEQ = peptides.get(0);
             SubstitutionMatrix<AminoAcidCompound> matrix = readMSMatrix();
-            System.out.println(peptideSEQ);
             for(int i = 1; i < peptides.size(); i++){
                 ProteinSequence currentPep = peptides.get(i);
-            //    SequencePair<ProteinSequence, AminoAcidCompound> pair = Alignments.getPairwiseAlignment(peptideSEQ, currentPep,Alignments.PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(3,1), matrix);
-            //  System.out.printf("%n%s vs %s%n%s", pair.getQuery().getAccession(), pair.getTarget().getAccession(), pair);
-            //  double percentage = 100 * pair.getNumIdenticals()/pair.getLength();
-            //  System.out.println("Identical: " + percentage);
-            //  double percentage2 = 100 * pair.getNumSimilars() / pair.getLength();
-            //    System.out.println("Similar: " + percentage2);
                 NeedlemanWunsch<ProteinSequence, AminoAcidCompound> alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(peptideSEQ, currentPep, new SimpleGapPenalty(3,1), matrix);
-//                System.out.println("Score:" + alignment.getScore());
-//                System.out.println("Similarity: " + alignment.getSimilarity());
-                valueSimilarity.add(alignment.getSimilarity());
+                Integer aligmentSimilarity = (int) (Math.round(100*alignment.getSimilarity()));
+                valueSimilarity.add(aligmentSimilarity);
             }
         }
         return valueSimilarity;
@@ -84,6 +76,10 @@ public class VariantAnnotation {
     public static SubstitutionMatrix<AminoAcidCompound> readMSMatrix(){
         return new SimpleSubstitutionMatrix<AminoAcidCompound>(AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
                 VariantAnnotation.class.getResourceAsStream("/pam30ms.txt")), "pam30ms");
+    }
+
+    private String validateSeq(String seq){
+        return seq.replace("#", "").replace("@","").replace("]","");
     }
 
 }

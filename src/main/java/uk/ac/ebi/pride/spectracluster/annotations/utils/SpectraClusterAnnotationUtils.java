@@ -66,6 +66,11 @@ public class SpectraClusterAnnotationUtils {
         PEP_THIRD_CONTAMINANTS("PEP_CONTAMINANT_THIRD", "The list of proteins where this peptides appear"),
         PEP_FOUR_CONTAMINANTS("PEP_CONTAMINANT_FOUR", "The list of proteins where this peptides appear"),
 
+        IS_PEP_CONTAMINANTS("IS_PEP_CONTAMINANT", "The list of proteins where this peptides appear"),
+        IS_PEP_SECOND_CONTAMINANTS("IS_PEP_CONTAMINANT_SECOND", "The list of proteins where this peptides appear"),
+        IS_PEP_THIRD_CONTAMINANTS("IS_PEP_CONTAMINANT_THIRD", "The list of proteins where this peptides appear"),
+        IS_PEP_FOUR_CONTAMINANTS("IS_PEP_CONTAMINANT_FOUR", "The list of proteins where this peptides appear"),
+
         PEP_SECOND_SIMILARITY("PEP_SIMILARITY_SECOND", "The list of proteins where this peptides appear"),
         PEP_THIRD_SIMILARITY("PEP_SIMILARITY_THIRD",   "The list of proteins where this peptides appear"),
         PEP_FOUR_SIMILARITY("PEP_SIMILARITY_FOUR",     "The list of proteins where this peptides appear");
@@ -110,7 +115,7 @@ public class SpectraClusterAnnotationUtils {
     }
 
     public static StringBuilder appendDouble(StringBuilder line, Double f) {
-        String fString = f == null ? NA : String.format("%10.3f", f).trim();
+        String fString = f == null ? NA : String.format("%10.2f", f).trim();
         line.append(fString).append("\t");
         return line;
     }
@@ -133,6 +138,8 @@ public class SpectraClusterAnnotationUtils {
         StringBuilder line = new StringBuilder();
         for(HEADER value: HEADER.values())
             line.append(value.getHeader()).append(TAB_DELIMITED);
+        // remove the last tab
+        line = line.delete(line.length() - 1, line.length());
         return line;
     }
 
