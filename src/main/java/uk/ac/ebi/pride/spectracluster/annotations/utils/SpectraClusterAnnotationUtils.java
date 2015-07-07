@@ -123,7 +123,7 @@ public class SpectraClusterAnnotationUtils {
     public static String collectionToString(Collection objs) {
         StringBuilder appender = new StringBuilder();
 
-        if (objs == null || objs.isEmpty())
+        if (objs == null || objs.isEmpty() || objs.size() < 1)
             return NA;
 
         for (Object obj : objs) {

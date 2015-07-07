@@ -85,7 +85,9 @@ public class ClusterAnnotatorRunner {
 
         out.println(SpectraClusterAnnotationUtils.getValuesHeader());
 
-        for(AnnotatedSpectraCluster cluster: clusters)
+        for(AnnotatedSpectraCluster cluster: clusters){
             out.append(cluster.reportLine()).append("\n");
+        }
+
     }
 }
